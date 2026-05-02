@@ -12,6 +12,7 @@ class TestSigninPage:
         main_page.open_page(TestUrls.main_page_url)
         signin_page = main_page.click_button_login_account()
         main_page_after_login = signin_page.login_user(registered_user)
+        main_page_after_login.wait_url_contains(data.main_text)
         main_page_after_login.click_button_create_recipe()
         main_page_after_login.fill_recipe()
         main_page_after_login.click_button_create()
