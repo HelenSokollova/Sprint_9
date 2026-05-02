@@ -27,7 +27,7 @@ jobs:
       run: |
         docker run -d --name selenoid -p 4444:4444 \
           -v /var/run/docker.sock:/var/run/docker.sock \
-          aerokube/selenoid:latest \
+          aerokube/selenoid:1.10.7 \
           -browser "chrome:128.0"
         sleep 5
     
