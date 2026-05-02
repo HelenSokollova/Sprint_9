@@ -1,52 +1,19 @@
-name: CI/CD Pipeline
+name: Selenoid Tests Workflow
 
 on:
   push:
-    branches: 
+    branches:
       - develop
 
 jobs:
-  test:
+  run-selenoid-tests:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.14'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    
-    - name: Start Selenoid
-      run: |
-        docker run -d --name selenoid -p 4444:4444 \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          aerokube/selenoid:1.10.7 \
-          -browser "chrome:128.0"
-        sleep 5
-    
-    - name: Run tests
-      run: |
-        pytest tests/  --alluredir=allure-results
-      env:
-        SELENOID_URL: http://localhost:4444/wd/hub
-    
-    - name: Upload Allure results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: allure-results
-        path: allure-results
-    
-    - name: Generate Allure Report
-      uses: simple-elf/allure-report-action@v1
-      if: always()
-      with:
-        allure_results: allure-results
-        allure_report: allure-report
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      
+      - name: Pull selenoid image
+        run: docker pull selenoid/chrome:128.0
+      
+      - name: Run tests in docker
+        run: docker compose up --build --exit-code-from sprint_9
