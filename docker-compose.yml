@@ -1,14 +1,18 @@
+version: '3.5'
+
 services:
   selenoid:
-    image: "aerokube/selenoid:1.10.7"
+    image: "aerokube/selenoid"
     container_name: selenoid
     ports:
       - "4444:4444"
     networks:
       - selenoid
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
       - "./config:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./video:/opt/selenoid/video"
+      - "./logs:/opt/selenoid/logs"
     command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "selenoid"]
 
   selenoid-ui:
@@ -23,16 +27,17 @@ services:
   sprint_9:
     build: .
     container_name: sprint_9
+    volumes:
+      - "./allure-results:/app/allure-results"
     depends_on:
       - selenoid
     networks:
       - selenoid
     environment:
       - SELENOID_URL=http://selenoid:4444/wd/hub
-    volumes:
-      - "./allure-results:/app/allure-results"
     command: ["pytest", "tests/", "-v", "--alluredir", "/app/allure-results"]
 
 networks:
   selenoid:
     name: selenoid
+    
