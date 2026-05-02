@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  selenoid-ui:
+    image: "aerokube/selenoid-ui:latest"
+    container_name: selenoid-ui
+    ports:
+      - "8081:8080"
+    command: ["--selenoid-uri", "http://host.docker.internal:4444"]
+
+  test:
+    image: "sprint_9"
+    container_name: test
+    volumes:
+      - "./allure-results:/app/allure-results"
+    environment:
+      - SELENOID_URL=http://host.docker.internal:4444/wd/hub
+    command: ["pytest", "tests/", "-v", "--alluredir", "/app/allure-results"]
+    

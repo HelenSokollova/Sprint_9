@@ -1,0 +1,7 @@
+signin_text = 'signin'
+main_text = 'recipes'
+recipe_name = 'Тестовый рецепт'
+ingredient_name = 'пов'
+ingredient_quantity = '100'
+cooking_time = '5'
+description = 'тут описание рецепта'
