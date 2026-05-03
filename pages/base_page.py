@@ -46,3 +46,8 @@ class BasePage:
         element = WebDriverWait(self.driver, 15).until(expected_conditions.visibility_of_element_located(locator))
         return element.text
     
+    @allure.step('Ожидаем полной загрузки страницы')
+    def wait_for_page_load(self):
+        WebDriverWait(self.driver, 15).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        return self
+    
